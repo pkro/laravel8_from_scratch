@@ -2,6 +2,9 @@ Laravel 8 from scratch
 
 Notes on the laracasts course of the same name
 
+<!-- START doctoc -->
+<!-- END doctoc -->
+
 # 1 Prerequisites and Setup
 
 ## Introdution to MVC in Laravel
@@ -31,4 +34,27 @@ Another way, if php / DB are installed locally, is using the [laravel installer 
 
 ## EXKURS: html/css/tailwind workshop for blog design
 
-I'll follow this for the sake of getting an overview of tailwind, but in my oppinion CSS frameworks suck and mix design and html structure, which can be hard to read in templates as it is.
+CSS frameworks are an abomination
+
+# The basics
+
+## Simple routes
+
+Web routes are defined `routes/web.php`, views under `resources/views`. Routes don't have to use / return a view. Some route examples:
+
+    Route::get('/peer', function () {
+        return view('peer'); // view file = resources/views/peer.blade.php
+    });
+
+    Route::get('/noview', function () {
+        return "hey hey my my"; // returns just that, no view file necessary
+    });
+
+    Route::get('/givemesomejson', function () {
+        // this array gets automatically converted to JSON
+        return ['here' => ['you', 'have', 'some', 'json']];
+    });
+
+## Including CSS and JS
+
+The css / js files and folders in `resources` are meant to be compiled / bundled, so we ignore these for now and put the css we use directly under `public/app.css` and `app.js` and include them in the html as we would in any static page.
