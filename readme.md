@@ -54,7 +54,20 @@ Web routes are defined `routes/web.php`, views under `resources/views`. Routes d
         // this array gets automatically converted to JSON
         return ['here' => ['you', 'have', 'some', 'json']];
     });
+    
+    // $title and $post will be availabe in the view
+    Route::get('post', function () {
+        return view('post', [
+            'title' => '1st post!!!',
+            'post' => 'hello world'
+        ]);
+    });
 
 ## Including CSS and JS
 
 The css / js files and folders in `resources` are meant to be compiled / bundled, so we ignore these for now and put the css we use directly under `public/app.css` and `app.js` and include them in the html as we would in any static page.
+
+## Storing blog posts as html
+
+In the next step, we store the posts as individual html files in resources/posts and use their name as a slug we append to the URL. The commands `dd` and `ddd` are debug commands built in laravel (dump and die (dd) ...and debug (ddd)); 
+

@@ -12,21 +12,22 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/peer', function () {
-    return view('peer');
-});
-
-Route::get('/noview', function () {
-    return "hey hey my my";
-});
-
-Route::get('/givemesomejson', function () {
-    // this array gets automatically converted to JSON
-    return ['here' => ['you', 'have', 'some', 'json']];
-});
-
 Route::get('/', function () {
-    return view('welcome');
+    return view('posts');
+});
+
+Route::get('post/{post}', function ($slug) {
+    $path = __DIR__ . '/../resources/posts/' . $slug . '.html';
+    if (!file_exists($path)) {
+
+        //ddd('file does not exist'); // dump, die and debug
+        //abort(404);
+        return redirect('/');
+    }
+    $post = file_get_contents($path);
+    return view('post', [
+        'post' => $post
+    ]);
 });
 
 

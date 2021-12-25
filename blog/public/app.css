@@ -1,4 +1,26 @@
 body {
-    background: blue;
-    color: white;
+    background: white;
+    color: black;
+    max-width: 600px;
+    margin: auto;
+    font-family: sans-serif;
+}
+
+article {
+    margin-top: 0.5em;
+    background: #f5f7ff;
+    border-radius: 5px;
+    box-shadow: 3px 3px 3px #e5ebff;
+    padding: 1em;
+    border-left: 1px solid silver;
+    border-top: 1px solid silver;
+}
+
+/* all articles except the first */
+article + article {
+    margin-top: 1.5em;
+}
+
+p {
+    line-height: 1.7;
 }

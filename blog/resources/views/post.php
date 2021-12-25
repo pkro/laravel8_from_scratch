@@ -11,7 +11,11 @@
 </head>
 <body>
 
-<h1>Hello world</h1>
+<article>
+    <?= $post; ?>
+</article>
+
+<a href="/">Go back</a>
 
 </body>
 </html>
