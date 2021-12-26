@@ -23,12 +23,10 @@ Route::get('post/{post}', function ($slug) {
         //abort(404);
         return redirect('/');
     }
-    $post = file_get_contents($path);
+    $post = cache()->remember("posts.{$slug}", 5, function () use ($path) {
+        return file_get_contents($path);
+    });
     return view('post', [
         'post' => $post
     ]);
 })->where('post', '[A-z\-]+');
-
-
-
-
