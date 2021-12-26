@@ -69,5 +69,25 @@ The css / js files and folders in `resources` are meant to be compiled / bundled
 
 ## Storing blog posts as html
 
-In the next step, we store the posts as individual html files in resources/posts and use their name as a slug we append to the URL. The commands `dd` and `ddd` are debug commands built in laravel (dump and die (dd) ...and debug (ddd)); 
+In the next step, we store the posts as individual html files in resources/posts and use their name as a slug we append to the URL. The commands `dd` and `ddd` are debug commands built in laravel (dump and die (dd) ...and debug (ddd)).
 
+## Route wildcards
+
+A slug / parameter can be checked by using `->where(paramName, regex)` instead of checking it in the route function that returns a 404 if it doesn't match.
+
+    Route::get('post/{post}', function ($slug) {
+        $path = __DIR__ . '/../resources/posts/' . $slug . '.html';
+        if (!file_exists($path)) {
+            //ddd('file does not exist'); // dump, die and debug
+            //abort(404);
+            return redirect('/');
+        }
+        $post = file_get_contents($path);
+        return view('post', [
+            'post' => $post
+        ]);
+    })->where('post', '[A-z_\-]+'); // letters, underscores and dashes
+
+Additional predefined `whereX` methods are defined such as `whereAlpha(variableName)`, which is the same as `where('post', '[A-z]+')`.
+
+## Caching
