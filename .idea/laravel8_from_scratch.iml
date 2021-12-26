@@ -114,6 +114,8 @@
       <excludeFolder url="file://$MODULE_DIR$/blog/vendor/graham-campbell/result-type" />
       <excludeFolder url="file://$MODULE_DIR$/blog/vendor/phpdocumentor/reflection-docblock" />
       <excludeFolder url="file://$MODULE_DIR$/blog/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/blog/vendor/spatie/yaml-front-matter" />
+      <excludeFolder url="file://$MODULE_DIR$/blog/vendor/symfony/yaml" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
