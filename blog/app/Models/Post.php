@@ -4,28 +4,54 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\File;
+use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 
 class Post
 {
-    public static function find($slug) {
+    public $title;
+    public $excerpt;
+    public $date;
+    public $body;
+    public $slug;
 
-        if(!file_exists($path=resource_path("posts/${slug}.html"))) {
-            //redirect('/');
-            throw new ModelNotFoundException();
-        }
+    /**
+     * @param $title
+     * @param $excerpt
+     * @param $date
+     * @param $body
+     */
+    public function __construct($title, $excerpt, $date, $body, $slug)
+    {
+        $this->title = $title;
+        $this->excerpt = $excerpt;
+        $this->date = $date;
+        $this->body = $body;
+        $this->slug = $slug;
+    }
 
-        return cache()->remember("posts.{$slug}", 1, function() use ($path) {
-            return file_get_contents($path);
+
+    public static function find($slug)
+    {
+        return cache()->remember("posts.{$slug}", 5, function () use ($slug) {
+            return self::all()->firstWhere('slug', $slug);
         });
     }
 
-    public static function all() {
-        // returns an array of SplFileInfo objects
-        return array_map(function ($file) {
-            // we could also just use $file->getContents(), but the find method might do something
-            // necessary before returning it in the future
-            return self::find($file->getFilenameWithoutExtension());
-        }, File::allFiles(resource_path('posts')));
+    public static function all()
+    {
+        return collect(File::files(resource_path("posts")))
+            ->map(function ($file) {
+                return YamlFrontMatter::parseFile($file);
+            })
+            ->map(function ($yfm) {
+                return new Post(
+                    $yfm->matter('title'),
+                    $yfm->matter('excerpt'),
+                    $yfm->matter('date'),
+                    $yfm->body(),
+                    $yfm->matter('slug'),
+                );
+            });
     }
 }
