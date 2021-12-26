@@ -1,7 +1,7 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Models\Post;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,8 +13,7 @@ use App\Models\Post;
 |
 */
 Route::get('/', function () {
-    $posts = Post::all();
-    return view('posts', ['posts' => $posts]);
+    return view('posts', ['posts' => Post::all()]);
 });
 
 Route::get('post/{post}', function ($slug) {
