@@ -2,8 +2,24 @@ Laravel 8 from scratch
 
 Notes on the laracasts course of the same name
 
-<!-- START doctoc -->
-<!-- END doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [1 Prerequisites and Setup](#1-prerequisites-and-setup)
+  - [Introdution to MVC in Laravel](#introdution-to-mvc-in-laravel)
+  - [Initial environment setup](#initial-environment-setup)
+  - [EXKURS: html/css/tailwind workshop for blog design](#exkurs-htmlcsstailwind-workshop-for-blog-design)
+- [The basics](#the-basics)
+  - [Simple routes](#simple-routes)
+  - [Including CSS and JS](#including-css-and-js)
+  - [Storing blog posts as html](#storing-blog-posts-as-html)
+  - [Route wildcards](#route-wildcards)
+  - [Caching](#caching)
+  - [Use a model and Filesystem class to read a directory](#use-a-model-and-filesystem-class-to-read-a-directory)
+  - [Adding Metadata to posts](#adding-metadata-to-posts)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # 1 Prerequisites and Setup
 
