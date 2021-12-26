@@ -6,7 +6,7 @@ Notes on the laracasts course of the same name
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
 
-- [1 Prerequisites and Setup](#1-prerequisites-and-setup)
+- [Prerequisites and Setup](#prerequisites-and-setup)
   - [Introdution to MVC in Laravel](#introdution-to-mvc-in-laravel)
   - [Initial environment setup](#initial-environment-setup)
   - [EXKURS: html/css/tailwind workshop for blog design](#exkurs-htmlcsstailwind-workshop-for-blog-design)
@@ -18,6 +18,7 @@ Notes on the laracasts course of the same name
   - [Caching](#caching)
   - [Use a model and Filesystem class to read a directory](#use-a-model-and-filesystem-class-to-read-a-directory)
   - [Adding Metadata to posts](#adding-metadata-to-posts)
+- [The Blade templating engine](#the-blade-templating-engine)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
