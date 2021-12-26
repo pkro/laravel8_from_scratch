@@ -21,11 +21,11 @@ Notes on the laracasts course of the same name
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# 1 Prerequisites and Setup
+# Prerequisites and Setup
 
 ## Introdution to MVC in Laravel
 
-Request (URL call from brower) 
+Request (URL call from browser) 
     -> laravel app is loaded
     -> registered response is loaded from `routes.php`, e.g. `Route::get('/', [PizzaController::class, 'index']);`
     -> Controller delegates SQL queries to eloquent model; Controller is also the place for domain knowledge / business logic 
@@ -229,4 +229,47 @@ In the `find` method we can now use the `all()` method to return a post by its s
             return self::all()->firstWhere('slug', $slug);
         });
     }
+
+Laravel collections has several sort methods. We can also use the cache to cache a result "forever", meaning until we manually or programmatically update it.
+
+    public static function all()
+    {
+        return cache()->rememberForever('posts.all', function () {
+            return collect(File::files(resource_path("posts")))
+                ->map(function ($file) {
+                    return YamlFrontMatter::parseFile($file);
+                })
+                ->map(function ($yfm) {
+                    return new Post(
+                        $yfm->matter('title'),
+                        $yfm->matter('excerpt'),
+                        $yfm->matter('date'),
+                        $yfm->body(),
+                        $yfm->matter('slug'),
+                    );
+                })
+                ->sortBy('date', SORT_REGULAR, true);
+        });
+    }
+
+To update the cache, we can use the `php artisan tinker` (or `sail artisan tinker` when using sail) shell using `cache()->forget('posts.all')`. This can of course be done in the app / cron job as well.
+
+    pk@pk-lightshow:~/projects/php/laravel/laravel8_from_scratch/blog$ sail artisan tinker
+    Psy Shell v0.10.12 (PHP 8.1.0 — cli) by Justin Hileman
+    >>> cache('posts.all') # view cache
+    => Illuminate\Support\Collection {#3503
+         all: [
+           2 => App\Models\Post {#3499
+             +title: "3rd post!1!!",
+            # etc...
+    >>> cache()->forget('posts.all') # clears cache
+        => true
+ 
+Cache items can also be viewed with `cache()->get(keyname)`, or set with `cache()->put(key, val)` or just `cache([key=>val], optionalDurationInSeconds)`.
+
+The Model might not be a good place to read the filesystem, so it might be a good idea to put that into a Serviceprovider (`app/Providers`). We will not do that here / now.
+
+# The Blade templating engine
+
+While PHP can still be used in the templates, it has also a template language that makes writing views more comfortable. So instead of writing `<?php echo $post->title; ?>` we can just write `{{ $post->title }}`.
 

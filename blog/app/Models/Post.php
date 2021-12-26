@@ -40,18 +40,21 @@ class Post
 
     public static function all()
     {
-        return collect(File::files(resource_path("posts")))
-            ->map(function ($file) {
-                return YamlFrontMatter::parseFile($file);
-            })
-            ->map(function ($yfm) {
-                return new Post(
-                    $yfm->matter('title'),
-                    $yfm->matter('excerpt'),
-                    $yfm->matter('date'),
-                    $yfm->body(),
-                    $yfm->matter('slug'),
-                );
-            });
+        return cache()->rememberForever('posts.all', function () {
+            return collect(File::files(resource_path("posts")))
+                ->map(function ($file) {
+                    return YamlFrontMatter::parseFile($file);
+                })
+                ->map(function ($yfm) {
+                    return new Post(
+                        $yfm->matter('title'),
+                        $yfm->matter('excerpt'),
+                        $yfm->matter('date'),
+                        $yfm->body(),
+                        $yfm->matter('slug'),
+                    );
+                })
+                ->sortBy('date', SORT_REGULAR, true);
+        });
     }
 }
