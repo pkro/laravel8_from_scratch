@@ -359,4 +359,36 @@ post.blade.php:
 
 ### Option 2 - blade components
 
-Blade components allow to wrap html. To create them, create a `components` directory under `views`.
+Blade components allow to wrap html. To create them, create a `components` directory under `views`. The name of the directory is NOT arbitrary and must be `components`. Once created, the components created in there are immediately available.
+
+Here is a simple example. `$slot` is a non-arbitrary name of the default content that is wrapped in `<x-viewName></x-viewName>` tags in the views.
+
+![layout component directory tree](readme-images/layout_component_dir_tree.png)
+
+views/components/myPrettyLayout.blade.php
+
+    <!doctype html>
+    <html lang="de">
+    <head>
+        ...
+    </head>
+    <body>
+    {{ $slot }}
+    </body>
+    </html>
+
+views/post.blade.php
+
+    <x-myPrettyLayout>
+    <article>
+        <h1>{{ $post->title }}</h1>
+        {!! $post->body !!}
+    </article>
+    <a href="/">Go back</a>
+    </x-myPrettyLayout>
+
+ Both ways to create layout template approaches are equal.
+ 
+Components don't have to be just a html scaffold but can also be used for single components such as buttons, similar to react components.
+
+### Tweaks for the blog app

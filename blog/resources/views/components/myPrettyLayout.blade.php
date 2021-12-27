@@ -10,6 +10,6 @@
     <script src="/app.js"></script>
 </head>
 <body>
-@yield('content')
+{{ $slot }}
 </body>
 </html>
