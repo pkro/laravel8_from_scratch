@@ -19,6 +19,13 @@ Notes on the laracasts course of the same name
   - [Use a model and Filesystem class to read a directory](#use-a-model-and-filesystem-class-to-read-a-directory)
   - [Adding Metadata to posts](#adding-metadata-to-posts)
 - [The Blade templating engine](#the-blade-templating-engine)
+  - [Basics](#basics)
+  - [Layouts](#layouts)
+    - [Option 1 - Layout files](#option-1---layout-files)
+    - [Option 2 - blade components](#option-2---blade-components)
+    - [Tweaks for the blog app](#tweaks-for-the-blog-app)
+- [Working with Databases](#working-with-databases)
+  - [Environment files](#environment-files)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
