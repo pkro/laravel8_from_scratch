@@ -272,5 +272,91 @@ The Model might not be a good place to read the filesystem, so it might be a goo
 
 # The Blade templating engine
 
-While PHP can still be used in the templates, it has also a template language that makes writing views more comfortable. So instead of writing `<?php echo $post->title; ?>` we can just write `{{ $post->title }}`.
+## Basics
 
+While PHP can still be used in the templates, it has also a template language that makes writing views more comfortable. So instead of writing `<?php echo $post->title; ?>` we can just write `{{ $post->title }}`. The `.blade.php` file suffix is required for the blade tags to be parsed.
+
+In `storage/framework/views` you can see the compiled pure php versions of the blade views.
+
+By default, the piped variables shown with `{{ var }}` are escaped, so contained tags appear as normal text. To show them unescaped, use `{!! var !!}`.
+
+Control structures such as `foreach` can be used by adding an `@` in front ("blade directives").
+
+    @foreach($posts as $post)
+        <article>
+            <a href="/post/{{ $post->slug }}"> <h1>{{ $post->title }}</h1></a>
+            <div>{{ $post->excerpt }}</div>
+        </article>
+    @endforeach
+
+This translates to 
+
+    <?php $__currentLoopData = $posts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $post): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <article>
+        <a href="/post/<?php echo e($post->slug); ?>"> <h1><?php echo e($post->title); ?></h1></a>
+        <div><?php echo e($post->excerpt); ?></div>
+    </article>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+This means that the created `$loop` variable is accessible in blade and can e.g. be shown with `@dd($loop)`. This **also** means that you can't define your own variable named `$loop` here.
+
+Example `@dd($loop)` output:
+
+    {#293 ▼
+      +"iteration": 1
+      +"index": 0
+      +"remaining": 3
+      +"count": 4
+      +"first": true
+      +"last": false
+      +"odd": true
+      +"even": false
+      +"depth": 1
+      +"parent": null
+    }
+
+The `$loop` properties can be useful for conditional formating in the html by checking for "->last", "->odd" or "->even".
+
+Blade also has convenience flow control keywords such as `@unless / @endunless` as the opposite of `@if`.
+
+## Layouts
+
+Layouts (to avoid repetitive HTML boilerplate code in each view) can be defined in 2 ways.
+
+### Option 1 - Layout files
+
+Create a `layout.blade.php` (the name is not important) in the `views` directory and add one or many `@yield` directives where the content of the other views should go (`content` in the example is arbitrary):
+
+layout.blade.php:
+
+    <!doctype html>
+    <html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>My awesome blog</title>
+        <link rel="stylesheet" href="/app.css">
+        <script src="/app.js"></script>
+    </head>
+    <body>
+    @yield('content')
+    </body>
+    </html>
+
+post.blade.php:
+
+    @extends('layout')
+    
+    @section('content')
+    <article>
+        <h1>{{ $post->title }}</h1>
+        {!! $post->body !!}
+    </article>
+    <a href="/">Go back</a>
+    @endsection
+
+### Option 2 - blade components
+
+Blade components allow to wrap html. To create them, create a `components` directory under `views`.
