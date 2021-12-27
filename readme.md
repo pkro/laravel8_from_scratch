@@ -392,3 +392,31 @@ views/post.blade.php
 Components don't have to be just a html scaffold but can also be used for single components such as buttons, similar to react components.
 
 ### Tweaks for the blog app
+
+- we remove the route constraint (`->where(...`) in `routes/web.php` as we shouldn't need it anymore the way we find the slug
+- now, when we append an non-existing slug, we get an error page as the model returns `null` as it doesn't find a post with that name. The view still gets rendered but as $post is null, it produces an error.
+- A common pattern is to create a `find` and a `findOrFail` method in the model:
+
+models/Post.php
+
+    public static function find($slug)
+    {
+            return static::all()->firstWhere('slug', $slug);
+    }
+
+    public static function findOrFail($slug) {
+        $post = static::find($slug);
+            if(! $post) {
+                throw new ModelNotFoundException();
+            }
+
+            return $post;
+    }
+
+The exception returns a 404 to the user.
+
+# Working with Databases
+
+## Environment files
+
+The usual `.env` file stuff, accessed with `env(settingName, defaultValue)` in laravel. DB settings are set up there.
