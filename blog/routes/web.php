@@ -16,8 +16,8 @@ Route::get('/', function () {
     return view('posts', ['posts' => Post::all()]);
 });
 
-Route::get('post/{post}', function ($slug) {
-    // Find a post by it's slug and pass it to a view called post
-    return view('post', ['post' => Post::findOrFail($slug)]);
+Route::get('post/{id}', function ($id) {
+    // Find a post by it's id and pass it to a view called post
+    return view('post', ['post' => Post::findOrFail($id)]);
 });
 
