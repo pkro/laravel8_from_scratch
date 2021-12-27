@@ -549,6 +549,25 @@ Then we can auto-create the Model (The model name should be the singular version
     pk@pk-lightshow:~/projects/php/laravel/laravel8_from_scratch/blog$ sail artisan make:model Post
     Model created successfully.
 
-We can now create a post with tinker the same way we created a user before.
+We can now create a post with tinker the same way we created a user before or we can create a new Post by using mass assignment.
 
+    >>> use App\Models\Post;
+    >>> Post::create(['title' => 'My third post', 'slug' => 'my-third-post', 'excertpt' => 'test123', 'body' => 'It was a long winter night befor solstice']);
+    Illuminate\Database\Eloquent\MassAssignmentException with message 'Add [title] to fillable property to allow mass assignment on [App\Models\Post].'
+
+Laravel throws an error because we need to explicitly define in the model which fields are allowed to be mass assigned ("mass assigning" meaning to fill all the attributes of an entry in bulk):
+
+    # added as property to Post model
+    protected $fillable = ['title'];
+
+After restarting tinker, we will still get a (confusing) error:
+
+    >>> Post::create(['title' => 'My third post', 'slug' => 'my-third-post', 'excertpt' => 'test123', 'body' => 'It was a long winter night befor solstice']);
+    Illuminate\Database\QueryException with message 'SQLSTATE[HY000]: General error: 1364 Field 'slug' doesn't have a default value (SQL: insert into `posts` (`title`, `updated_at`, `created_at`) values (My third post, 2021-12-27 18:56:41, 2021-12-27 18:56:41))'
+
+This is caused by only `title` being assigned as fillable, so the other passed attributes are ignored and Eloquent tries to use the defaults for the missing fields, which for most don't exist / aren't defined in the migration, so we must add all fields that should be mass assignable to the $fillable property.
+
+The opposite to `$fillable` is `$guarded` which, if set, signals to Eloquent that all properties are fillable EXCEPT the ones defined in the `$guarded` array, e.g. `$guarded = ['id', 'created']`.
+
+A third option is to disable mass assignment entirely by setting $fillable to an empty array (and simply to never do mass assignment in the code).
 
