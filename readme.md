@@ -26,6 +26,9 @@ Notes on the laracasts course of the same name
     - [Tweaks for the blog app](#tweaks-for-the-blog-app)
 - [Working with Databases](#working-with-databases)
   - [Environment files](#environment-files)
+  - [Migrations](#migrations)
+  - [Eloquent ORM and the active record pattern](#eloquent-orm-and-the-active-record-pattern)
+  - [Make a Post model and migration](#make-a-post-model-and-migration)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
