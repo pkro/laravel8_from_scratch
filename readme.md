@@ -704,8 +704,95 @@ routes/web.php
 
 ## Clockwork and the N+1 problem
 
+Problem: At the moment, we're performing a sql query in every loop iteration as the posts are not automatically hydrated / filled with the category entry of the relationship but only on access.
+
+views/posts.blade.php
+
+    @foreach($posts as $post)
+        ...
+        <a href="/categories/{{$post->category->slug}}">{{ $post->category->name }}</a>
+    @endforeach
+
+We can log the queries using Illuminates DB facade in the main route:
+
+    Route::get('/', function () {
+        \Illuminate\Support\Facades\DB::listen(function($query) {
+            //\Illuminate\Support\Facades\Log::info('query executed');
+            //or, shorter
+            logger($query->sql, $query->bindings);
+        });
+        return view('posts', ['posts' => Post::all()]);
+    });
+
+When checking `storage/logs/laravel.log` we can see that for one page load of `/` we have one sql query for each post after the initial (lazy) loading of all posts in the route:
+
+    [2021-12-28 12:54:33] local.DEBUG: select * from `posts`  
+    [2021-12-28 12:57:46] local.DEBUG: select * from `categories` where `categories`.`id` = ? limit 1 [1] 
+    [2021-12-28 12:57:46] local.DEBUG: select * from `categories` where `categories`.`id` = ? limit 1 [2] 
+    [2021-12-28 12:57:46] local.DEBUG: select * from `categories` where `categories`.`id` = ? limit 1 [2] 
 
 
+Side note: a good debugging tool is [clockwork](https://underground.works/clockwork/) which gives access to performance and other information under `/clockwork` or in as a tab in the browser devtools. Clockwork must be installed with composer in the application **and** as a [browser plugin](https://addons.mozilla.org/en-US/firefox/addon/clockwork-dev-tools/)
 
+![clockwork screenshot](readme-images/clockwork.png)
 
+To solve the n+1 problem, we load all the categories in the initial loading of posts in the route using `with`:
 
+    return view('posts', ['posts' => Post::with('category')->get()]);
+
+No we can see (in the log or with clockwork) that only 2 queries are executed, no matter how many posts:
+
+![queries](readme-images/queries.png)
+
+## Database seeding (saves time)
+
+As we're changing and refining the models during development (e.g. adding a foreign key `user_id` to the posts migration), the database refresh always drops and recreates all tables so that the current data is lost.
+
+In `database/seeders/DatabaseSeeder.php` we can seed the database with initial records. In there is already a (commented out) setup for 10 fake users using `database/factories/UserFactory.php`, which uses [faker](https://github.com/fzaninotto/Faker) to create fake data. We can run this with `artisan db:seed` to create 10 user records (and 10 more on any subsequent run).
+
+We can change `DatabaseSeeder.php` for our needs (we've added a foreign user_id key in the posts migration).
+
+database/seeders/DatabaseSeeder.php
+
+    public function run()
+    {
+        // remove existing data so we don't get an exception when trying to insert
+        // the same value in a unique column
+        Category::truncate();
+        User::truncate();
+        Post::truncate();
+      
+        // create one user with the already existing factory
+        $user = User::factory()->create();
+
+        // create 2 categories (we don't have a factory for these yet)
+        $fun = Category::create([
+            'name' => 'fun stuff',
+            'slug' => 'fun'
+        ]);
+        $serious = Category::create([
+           ...
+        ]);
+        ...
+
+        Post::create([
+            'title' => 'Spray apache pool strength lying visited. ',
+            'slug' => 'my-first-post',
+            'body' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+            'excerpt' => 'abc 1234 i am an expert in excerpts',
+            'category_id' => $fun->id,
+            'user_id' => $user->id
+        ]);
+
+        Post::create([
+            ...
+        ]);
+
+        ...
+    }
+
+We can then refresh the database and seed it in one go with `artisan migrate:fresh --seed`.
+
+Side note: if we want to display the user in the views and avoid, yet again, unnecessary DB queries in each iteration, we must add `user` to the `with` clause in the route:
+
+    return view('posts', ['posts' => Post::with(['category', 'user'])->get()]);
