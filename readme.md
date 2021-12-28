@@ -33,6 +33,7 @@ Notes on the laracasts course of the same name
   - [The first eloquent relationship](#the-first-eloquent-relationship)
   - [Clockwork and the N+1 problem](#clockwork-and-the-n1-problem)
   - [Database seeding (saves time)](#database-seeding-saves-time)
+  - [Turbo boost with factories](#turbo-boost-with-factories)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
