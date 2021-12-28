@@ -115,6 +115,7 @@
       <path value="$PROJECT_DIR$/blog/vendor/composer" />
       <path value="$PROJECT_DIR$/blog/vendor/spatie/yaml-front-matter" />
       <path value="$PROJECT_DIR$/blog/vendor/symfony/yaml" />
+      <path value="$PROJECT_DIR$/blog/vendor/itsgoingd/clockwork" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0">
