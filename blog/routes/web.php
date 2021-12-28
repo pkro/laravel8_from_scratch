@@ -15,11 +15,11 @@ use App\Models\Post;
 |
 */
 Route::get('/', function () {
-    \Illuminate\Support\Facades\DB::listen(function($query) {
+    /*\Illuminate\Support\Facades\DB::listen(function($query) {
         //\Illuminate\Support\Facades\Log::info('query executed');
         //or, shorter
         logger($query->sql, $query->bindings);
-    });
+    });*/
     return view('posts', ['posts' => Post::with('category')->get()]);
 });
 
