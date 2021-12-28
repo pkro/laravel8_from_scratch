@@ -22,4 +22,9 @@ class Post extends Model
         // possible: hasOne, hasMany, belongsTo, belongsToMany
         return $this->belongsTo(Category::class);
     }
+    public function user()
+    {
+        // possible: hasOne, hasMany, belongsTo, belongsToMany
+        return $this->belongsTo(User::class);
+    }
 }
