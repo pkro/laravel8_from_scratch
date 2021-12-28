@@ -32,6 +32,7 @@ Notes on the laracasts course of the same name
   - [Route model binding](#route-model-binding)
   - [The first eloquent relationship](#the-first-eloquent-relationship)
   - [Clockwork and the N+1 problem](#clockwork-and-the-n1-problem)
+  - [Database seeding (saves time)](#database-seeding-saves-time)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
