@@ -15,7 +15,12 @@ use App\Models\Post;
 |
 */
 Route::get('/', function () {
-    return view('posts', ['posts' => Post::all()]);
+    \Illuminate\Support\Facades\DB::listen(function($query) {
+        //\Illuminate\Support\Facades\Log::info('query executed');
+        //or, shorter
+        logger($query->sql, $query->bindings);
+    });
+    return view('posts', ['posts' => Post::with('category')->get()]);
 });
 
 // a getRouteKeyName method to the model that returns 'slug',
