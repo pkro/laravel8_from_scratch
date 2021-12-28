@@ -1,4 +1,6 @@
 <?php
+
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 use App\Models\Post;
 
@@ -16,10 +18,15 @@ Route::get('/', function () {
     return view('posts', ['posts' => Post::all()]);
 });
 
+// a getRouteKeyName method to the model that returns 'slug',
+// so the post will be selected by the slug in the url, e.g. slug/my-first-post
+// without the method it would default to the post id
 Route::get('post/{post}', function (Post $post) {
     return view('post', ['post' => $post]);
 });
 
-Route::get('post/{post:slug}', function (Post $post) {
-    return view('post', ['post' => $post]);
+// this is just another way to select the category by slug
+// without adding a getRouteKeyName method to the model
+Route::get('categories/{category:slug}', function(Category $category) {
+    return view('posts', ['posts' => $category->posts]);
 });
