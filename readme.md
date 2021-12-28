@@ -643,7 +643,7 @@ To make a categories model so that we can assign categories to blog posts, we co
 
 but we can do this in one step by adding `-m` to make:model (we could also create a controller with `-c` and `-f` to create a factory):
 
-    sail artisan make:model Category -m
+    php artisan make:model Category -m
 
 We can now add our fields to the created migration ('name' and 'slug', where slug is optional) and add a foreign key to the posts migragtion:
 
@@ -798,4 +798,78 @@ We can then refresh the database and seed it in one go with `artisan migrate:fre
 
 Side note: if we want to display the user in the views and avoid, yet again, unnecessary DB queries in each iteration, we must add `user` to the `with` clause in the route:
 
-    return view('posts', ['posts' => Post::with(['category', 'user'])->get()]);
+## Turbo boost with factories
+
+Each generated eloquent model comes with `use HasFactory` that gives access to a factory function (see `User::factory()->create()`). The attributes will be created in the `definition` method of the modeos factory located in the `database/factories` directory, named ModelnameFactory.php, e.g. `UserFactory.php`. The factory method itself doesn't need to be defined by hand.
+
+Example of the ' definition` method in the predefined UserFactory:
+
+    public function definition()
+    {
+        return [
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'email_verified_at' => now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token' => Str::random(10),
+        ];
+    }
+
+As long as no factory class exists in `database/factories`, an error will occur when trying to use `Modelname::factory()->create()`. We can generate a factory with artisan:
+
+  `php artisan make:factory PostFactory`
+
+Alternatively, we can create a factory when creating the model:
+
+    php artisan make:model Category -f # or --factory
+
+Side note: we can create everything in one go by using `-a` or `--all`. See all options in `artisan help make:model`.
+
+`faker` can be accessed as a property of `$this` in the factory class.
+
+After we created the PostFactory, we can fill in the `definition` methods body:
+
+      return [
+            'title' => $this->faker->title(),
+            'excerpt' => $this->faker->sentence(),
+            'slug' => $this->faker->unique()->slug(3),
+            'body' => $this->faker->paragraph(),
+            // don't forget to import these, e.g. use App\Models\Category;
+            // these create a random category / user for each post
+            'category_id' => Category::factory(), // we created this as well
+            'user_id' => User::factory(),
+        ];
+
+We can try this out with tinker:
+
+    >>> App\Models\Post::factory()->create();
+    => App\Models\Post {#3611
+         title: "Prof.",
+         excerpt: "Quia sit et consequatur alias id.",
+         slug: "molestias-ratione-perspiciatis-quis",
+         body: "Odit tempora alias aliquid nobis aliquam non maiores. Ipsam sunt autem unde quidem dolor laboriosam. Ullam vero voluptatem voluptas sed et provident vel ipsam. Tempora molestias dolores ipsum eos ut sequi.",
+         category_id: 4,
+         user_id: 2,
+         updated_at: "2021-12-28 18:51:46",
+         created_at: "2021-12-28 18:51:46",
+         id: 4,
+       }
+
+No we can remove all the hand-creation in `DatabaseSeeder.php` (or leave some in if specific, non-random Posts / users / categories should be created) and just call `Post::factory(10)->create();` instead to create 10 posts with users / categories.
+
+If we want to assign specific non-random values, we can do so by passing the key and value to create:
+
+    User::factory()->create(['name' => 'John Doe']);
+
+This can be used to make the data generation a little more "realistic":
+
+    // create 6 posts in 2 different categories by the same user
+    $pk = User::factory()->create(['name' => 'PKRO']);
+    $fun = Category::factory()->create(['name'=>'fun stuff', 'slug' => 'fun']);
+    $serious = Category::factory()->create(['name'=>'serious stuff', 'slug' => 'serious']);
+    Post::factory(3)->create(['user_id' => $pk->id, 'category_id' => $fun->id]);
+    Post::factory(3)->create(['user_id' => $pk->id, 'category_id' => $serious->id]);
+    // create 5 more of everything, random
+    Post::factory(5)->create();
+
+

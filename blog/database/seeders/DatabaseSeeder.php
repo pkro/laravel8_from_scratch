@@ -22,8 +22,18 @@ class DatabaseSeeder extends Seeder
         User::truncate();
         Post::truncate();
 
+        // create 6 posts in 2 different categories by the same user
+        $pk = User::factory()->create(['name' => 'PKRO']);
+        $fun = Category::factory()->create(['name'=>'fun stuff', 'slug' => 'fun']);
+        $serious = Category::factory()->create(['name'=>'serious stuff', 'slug' => 'serious']);
+        Post::factory(3)->create(['user_id' => $pk->id, 'category_id' => $fun->id]);
+        Post::factory(3)->create(['user_id' => $pk->id, 'category_id' => $serious->id]);
+        // create 5 more of everything, random
+        Post::factory(5)->create();
+        // we don't need this anymore as we created a factory that creates Posts and users / categories in the process
+
         // create one user with the already existing factory
-        $user = User::factory()->create();
+        /*$user = User::factory()->create();
 
         // create 2 categories (we don't have a factory for these yet)
         $fun = Category::create([
@@ -64,6 +74,6 @@ class DatabaseSeeder extends Seeder
             'excerpt' => 'abc 1234 i am an expert in excerpts',
             'category_id' => $serious->id,
             'user_id' => $user->id
-        ]);
+        ]);*/
     }
 }
