@@ -20,7 +20,7 @@ Route::get('/', function () {
         //or, shorter
         logger($query->sql, $query->bindings);
     });*/
-    return view('posts', ['posts' => Post::with('category')->get()]);
+    return view('posts', ['posts' => Post::with(['category', 'user'])->get()]);
 });
 
 // a getRouteKeyName method to the model that returns 'slug',
