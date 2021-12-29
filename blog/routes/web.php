@@ -20,7 +20,7 @@ Route::get('/', function () {
         //or, shorter
         logger($query->sql, $query->bindings);
     });*/
-    return view('posts', ['posts' => Post::with(['category', 'user'])->get()]);
+    return view('posts', ['posts' => Post::latest('published')->with(['category', 'user'])->get()]);
 });
 
 // a getRouteKeyName method to the model that returns 'slug',
@@ -34,4 +34,8 @@ Route::get('post/{post}', function (Post $post) {
 // without adding a getRouteKeyName method to the model
 Route::get('categories/{category:slug}', function(Category $category) {
     return view('posts', ['posts' => $category->posts]);
+});
+
+Route::get('authors/{author:name}', function(User $author) {
+    return view('posts', ['posts' => $author->posts]);
 });
