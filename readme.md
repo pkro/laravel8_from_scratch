@@ -34,6 +34,8 @@ Notes on the laracasts course of the same name
   - [Clockwork and the N+1 problem](#clockwork-and-the-n1-problem)
   - [Database seeding (saves time)](#database-seeding-saves-time)
   - [Turbo boost with factories](#turbo-boost-with-factories)
+  - [Posts by author and other housekeeping stuff](#posts-by-author-and-other-housekeeping-stuff)
+  - [Eager loading relationships on an existing model](#eager-loading-relationships-on-an-existing-model)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
