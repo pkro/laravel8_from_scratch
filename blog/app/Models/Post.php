@@ -22,9 +22,18 @@ class Post extends Model
         // possible: hasOne, hasMany, belongsTo, belongsToMany
         return $this->belongsTo(Category::class);
     }
+
     public function user()
     {
         // possible: hasOne, hasMany, belongsTo, belongsToMany
         return $this->belongsTo(User::class);
+    }
+
+    // this way we can refer to the autor as Post->author, note the second
+    // argument in belongsTo
+    public function author()
+    {
+        // possible: hasOne, hasMany, belongsTo, belongsToMany
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
