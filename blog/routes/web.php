@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Models\Post;
 
@@ -20,7 +21,7 @@ Route::get('/', function () {
         //or, shorter
         logger($query->sql, $query->bindings);
     });*/
-    return view('posts', ['posts' => Post::latest('published')->with(['category', 'user'])->get()]);
+    return view('posts', ['posts' => Post::latest('published')->with(['category', 'user', 'author'])->get()]);
 });
 
 // a getRouteKeyName method to the model that returns 'slug',
@@ -36,6 +37,6 @@ Route::get('categories/{category:slug}', function(Category $category) {
     return view('posts', ['posts' => $category->posts]);
 });
 
-Route::get('authors/{author:name}', function(User $author) {
+Route::get('authors/{author:username}', function(User $author) {
     return view('posts', ['posts' => $author->posts]);
 });
