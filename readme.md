@@ -667,7 +667,7 @@ Then run `php artisan migrate:refresh`. We can now use tinker to create categori
     >>> $cat->name="just for fun"; $cat->slug="fun"; $cat->save();
     >>> Post::create(['title' => '3rd post', 'excerpt'=>'adgfds  gf asd', 'body'=>'dgf asfsdfa fdsgfdhjg eoruitgh gf ghfghfdlk g', 'slug'=>'my-third-post', 'category_id' => 2]);
 
-We can now change the Model so we can show the category of a given post (the full category entry, not just the foreign category_id). 
+We can now change the Model so we can show the category of a given post (the full category entry, not just the foreign category_id). The method name is important and must be the same as the model name, unless we specify a second argument for `belongsTo`. See [Posts by author and other housekeeping stuff](#posts-by-author-and-other-housekeeping-stuff))
 
 Models/Post.php
 
@@ -836,6 +836,7 @@ After we created the PostFactory, we can fill in the `definition` methods body:
             'excerpt' => $this->faker->sentence(),
             'slug' => $this->faker->unique()->slug(3),
             'body' => $this->faker->paragraph(),
+            'published' => $this->faker->dateTimeBetween('-10 days'),
             // don't forget to import these, e.g. use App\Models\Category;
             // these create a random category / user for each post
             'category_id' => Category::factory(), // we created this as well
@@ -873,5 +874,52 @@ This can be used to make the data generation a little more "realistic":
     Post::factory(3)->create(['user_id' => $pk->id, 'category_id' => $serious->id]);
     // create 5 more of everything, random
     Post::factory(5)->create();
+
+
+## Posts by author and other housekeeping stuff
+
+We can easily get results for Posts by using `latest`; under the hood, eloquent will add an `order by` statement.
+
+    Post::latest('published')->with(['category', 'user'])->get()
+
+To change the way we refer to semantically refer to a posts author as author and not (just) user, we can add a second artgument to `belongsTo`:
+
+    // we just keep that so code that still refers to ->user doesn't break
+    public function user()
+    {
+        // possible: hasOne, hasMany, belongsTo, belongsToMany
+        return $this->belongsTo(User::class);
+    }
+
+    // this way we can refer to the autor as Post->author, note the second
+    // argument in belongsTo
+    public function author()
+    {
+        // possible: hasOne, hasMany, belongsTo, belongsToMany
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+When we add properties this way, we must add them to the `with` method in `web.php` to avoid lazy loading (multiple sql queries for each post to get the author): `...with(['category', 'user', 'author'])...`, even if author / user refer to the same page.
+
+To add a route to view all posts by author name, we can simply reuse the posts view. As The user's name is not unique (there can be multiple "Paul Smith"), we will add a new field `username` in the User migration and seeder factory, then refresh and reseed with `sail artisan migrate:fresh --seed` as usual.
+
+routes/web.php
+
+    Route::get('authors/{author:username}', function(User $author) {
+        return view('posts', ['posts' => $author->posts]);
+    });
+
+## Eager loading relationships on an existing model
+
+In the category and author overview we don't eagerly load author and category yet, leading to an additional query for every displayed post again. We can fix that by adding the load method to the posts property:
+
+    return view('posts', ['posts' => $author->posts->load(['category', 'author'])]);
+
+Another way to accomplish this would be to add the models that should *always* be eagerly loaded to the Post model:
+
+    // this would always eagerly load the linked models
+    //protected $with = ['category', 'author'];
+
+You could then add `without` for queries where you **don't** want eager loading, e.g. `Post::without()->first()`.
 
 
