@@ -21,7 +21,7 @@ Route::get('/', function () {
         //or, shorter
         logger($query->sql, $query->bindings);
     });*/
-    return view('posts', ['posts' => Post::latest('published')->with(['category', 'user', 'author'])->get()]);
+    return view('posts', ['posts' => Post::latest('published')->with(['category', 'author'])->get()]);
 });
 
 // a getRouteKeyName method to the model that returns 'slug',
@@ -34,9 +34,9 @@ Route::get('post/{post}', function (Post $post) {
 // this is just another way to select the category by slug
 // without adding a getRouteKeyName method to the model
 Route::get('categories/{category:slug}', function(Category $category) {
-    return view('posts', ['posts' => $category->posts]);
+    return view('posts', ['posts' => $category->posts->load(['category', 'author'])]);
 });
 
 Route::get('authors/{author:username}', function(User $author) {
-    return view('posts', ['posts' => $author->posts]);
+    return view('posts', ['posts' => $author->posts->load(['category', 'author'])]);
 });
