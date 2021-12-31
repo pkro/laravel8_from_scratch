@@ -34,6 +34,8 @@ Notes on the laracasts course of the same name
   - [Clockwork and the N+1 problem](#clockwork-and-the-n1-problem)
   - [Database seeding (saves time)](#database-seeding-saves-time)
   - [Turbo boost with factories](#turbo-boost-with-factories)
+  - [Posts by author and other housekeeping stuff](#posts-by-author-and-other-housekeeping-stuff)
+  - [Eager loading relationships on an existing model](#eager-loading-relationships-on-an-existing-model)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -882,7 +884,7 @@ We can easily get results for Posts by using `latest`; under the hood, eloquent 
 
     Post::latest('published')->with(['category', 'user'])->get()
 
-To change the way we refer to semantically refer to a posts author as author and not (just) user, we can add a second artgument to `belongsTo`:
+To change the way we refer to semantically refer to a posts author as author and not (just) user, we can add a second argument to `belongsTo`:
 
     // we just keep that so code that still refers to ->user doesn't break
     public function user()
