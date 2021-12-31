@@ -36,6 +36,8 @@ Notes on the laracasts course of the same name
   - [Turbo boost with factories](#turbo-boost-with-factories)
   - [Posts by author and other housekeeping stuff](#posts-by-author-and-other-housekeeping-stuff)
   - [Eager loading relationships on an existing model](#eager-loading-relationships-on-an-existing-model)
+- [Integrate the design](#integrate-the-design)
+  - [AlpineJS Exkurs](#alpinejs-exkurs)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
