@@ -1,26 +1,329 @@
-body {
-    background: white;
-    color: black;
-    max-width: 600px;
-    margin: auto;
+* {
+    --darkerBgCorner: rgba(159, 159, 159, 0.69);
+}
+html * {
+    box-sizing: border-box;
     font-family: sans-serif;
+    font-size: 16px;
+    color: black;
 }
 
-article {
-    margin-top: 0.5em;
-    background: #f5f7ff;
-    border-radius: 5px;
-    box-shadow: 3px 3px 3px #e5ebff;
-    padding: 1em;
-    border-left: 1px solid silver;
-    border-top: 1px solid silver;
-}
-
-/* all articles except the first */
-article + article {
-    margin-top: 1.5em;
+body {
+    position: relative;
+    padding: 0;
+    margin: 0;
 }
 
 p {
-    line-height: 1.7;
+    line-height: 1.6;
 }
+
+.mainContent {
+    /*transform: translate(-150vw);*/
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    color: white;
+    transition: transform 0.2s 0s ease-out;
+    padding: 0.3em;
+    margin: 0;
+    background: linear-gradient(to right bottom, var(--darkerBgCorner) 0%, #FFFFFF 30%);
+}
+
+/*The main section*/
+.mainContent > section {
+    width: 96%;
+    margin: 1em auto 0 auto;
+    max-width: 1200px;
+}
+
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.topNav {
+    align-content: center;
+    justify-items: center;
+}
+
+a, a:hover, a:active {
+    text-decoration: none;
+}
+
+ul {
+    list-style-type: none;
+
+}
+
+nav ul {
+    display: flex;
+    justify-content: space-between;
+}
+
+nav li {
+    /*i should do this with width and space between*/
+    margin-left: 1.2em;
+}
+
+nav .logo {
+    width: 187px;
+    height: 60px;
+    border-radius: 5px;
+    background: url(images/logo.png) no-repeat center;
+}
+
+nav .plain {
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 1.0em;
+}
+
+.button {
+    padding: 0.4em 1em;
+    border-radius: 999px;
+    background: dodgerblue;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+section > header {
+    width: 60%;
+    margin: 0 auto 0 auto;
+    text-align: center;
+}
+
+.controls {
+    justify-content: space-evenly;
+}
+
+.jsPulldown {
+    width: 12em;
+}
+
+.jsPulldown button{
+    border-radius: 5px;
+    background-color: #EEE;
+    padding: 0.3em 1em;
+    border: none;
+    text-align: left;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+}
+
+
+
+.jsPulldown:hover {
+    cursor: pointer;
+}
+
+.jsPulldown div {
+    background-color: #EEE;
+    border-radius: 5px;
+    position: absolute;
+
+    text-align: left;
+    padding-left: 0.5em;
+    min-width: 12em;
+    max-width: max-content;
+    z-index: 1000;
+}
+
+.jsPulldown a {
+    display: block;
+    padding: 0.2em 0.5em;
+}
+
+.jsPulldown a:hover, .jsPulldown a:focus {
+    background: #DEDEDE;
+}
+
+
+main {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: [first] repeat(3, 1fr) [middle] repeat(3, 1fr) [end];
+    grid-gap: 20px;
+
+}
+
+article {
+    width: 100%;
+    grid-column: span 2;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 5px;
+    box-shadow: gray 2px 2px 2px 2px;
+}
+
+article:hover {
+    background: rgba(30, 144, 255, 0.5);
+    transition: all 0.2s 0s linear;
+}
+
+/*first one spans whole width*/
+article:nth-of-type(1) {
+    grid-column: first / span end;
+    flex-direction: row;
+}
+
+/* next two each half */
+article:nth-of-type(2) {
+    grid-column: first / span middle;
+}
+
+article:nth-of-type(3) {
+    grid-column: middle / span end;
+}
+
+article header {
+    display: flex;
+    justify-content: flex-start;
+}
+
+article .postOverview {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+}
+
+article:first-of-type .postOverview {
+    margin-left: 2em;
+}
+
+.categoryButtons {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.categoryButtons a {
+    background: transparent;
+    border-radius: 999px;
+    border: 1px solid #66c1e0;
+    color: #66c1e0;
+    padding: 0.3em 1.2em;
+    text-decoration: none;
+    margin-right: 0.8em;
+}
+
+.authorRow {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 2em;
+}
+
+.author {
+    display: flex;
+    align-items: center;
+    font-size: 0.8em;
+    color: gray;
+    text-decoration: none;
+}
+
+.avatar {
+    border-radius: 5px;
+    width: 30px;
+    height: 30px;
+    margin-right: 0.5em;
+}
+
+.authorRow .button {
+    background: silver;
+    text-decoration: none;
+    transition: all 0.2s 0s;
+    height: max-content;
+}
+
+article:hover .button {
+    border: 1px solid white;
+    color: white;
+    transition: all 0.2s 0s;
+}
+
+article:first-of-type > img {
+    display: block;
+    border-radius: 3px;
+    flex: 0 0 50%;
+    width: 360px;
+}
+
+/*The only image with half the size is the first one*/
+article img {
+    border-radius: 3px;
+    margin-bottom: 0.5em;
+}
+
+
+
+footer {
+    text-align: center;
+    margin-top: 2em;
+    background: rgba(243,244,246,0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 260px;
+    border-radius: 5px;
+
+
+}
+
+footer > img {
+    border-radius: 5px;
+    width: 80px;
+    margin: 0.7em auto 0.7em auto;
+}
+
+footer button {
+    margin-top: 0.7em;
+    margin-bottom: 0.7em;
+}
+
+/* post page */
+
+.post > img {
+    max-width: 160px;
+    height: 160px;
+    float: left;
+}
+
+.overviewTopControls {
+    display: flex;
+    justify-content: space-between;
+}
+
+/*Animation stuff*/
+.slideIn {
+    animation: slideInFromLeft 0.3s;
+    animation-fill-mode: forwards;
+}
+
+.slideOut {
+    transform: translate(-100vw);
+    /*transition: animation 0.2s 0s ease-in-out;*/
+    animation: slideOutToLeft 0.3s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes slideInFromLeft {
+    100% {
+        transform: translate(0px);
+    }
+}
+
+@keyframes slideOutToLeft {
+    100% {
+        transform: translate(-150vw);
+    }
+}
+

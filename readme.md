@@ -923,3 +923,55 @@ Another way to accomplish this would be to add the models that should *always* b
 You could then add `without` for queries where you **don't** want eager loading, e.g. `Post::without()->first()`.
 
 
+# Integrate the design
+
+Just some notes as I'm not planning to use the design and images as it uses tailwind and doesn't have a license file in the repo.
+
+Short notes on design integration:
+
+- extract post "cards" HTML for the overview pages in it's own blade component (`views/components/post-card.blade.php`)
+- refer to them with `<x-post-card />` (no dynamic data yet) in the posts overview.
+- If certain posts (e.g. the last 3) should have a different layout, do the same in e.g. `post-featured-card.blade.php`
+- move bigger / complicated parts into their own components or partials. Partials are blade snippets that can be put in views (or any subdirectory) and included in the by< using `@include`, e.g. `@include('_posts-header')` (**don't add `.blade.php`!), which simply translates to php `include` when compiled. 
+- variables can be passed to components with `<x-postCard :post=$post />`; In the course `@props(['post'])` is added at the top of the component, but seems to work without (?)
+
+
+> explanation by ikartik90 [here](https://laracasts.com/series/laravel-8-from-scratch/episodes/32): I tried this out, and turns out that if you don't provide @props but still pass them to your Blade component, it takes the passed props (say, the $post variable in this case) and appends them as attributes on the first element of the component (the article tag in the above case).  
+ Hence, once rendered, the generated code looks like:  
+`<article class="whatever classes passed" post="$post JSON object">`  
+And then it uses the above JSON object passed as attribute to the parent to render the content in the children.  
+But in doing so, even though it ends up preventing your web app from crashing and burning, everything you've fetched using your $post variable including any eager loaded relationships would get exposed, including their respective record IDs. Hence, I would rather suggest exercising on the side of caution and ensuring that you pass the props diligently.
+- html attributes like `<x-postCard class="postCard" id="myId">` can be passed into components and accessed using the `$attributes` variable in the component, e.g. `<article {{ $attributes->merge(['class' => 'anotherclass']) }}>`, which would translate to `<article class="anotherClass postCard" id="myId">`
+- Timestamps have a method that makes it easy to convert them to strings like "one hour ago": `$post->created_at->diffForHumans()`
+- Instead of `$category->id === $currentCategory->id` you can write `$category->is($currentCategory)`
+## AlpineJS Exkurs
+
+[AlpineJS](https://alpinejs.dev/)
+
+[IntelliJ Alpine plugin](https://plugins.jetbrains.com/plugin/15251-alpine-js-support)
+
+AlpineJS allows for declarative and reactive javascript functionality similar to vue.js with a 6kb include.
+
+See `_header.blade.php` for an example of a javascript pulldown using alpine.js (included from a cdn):
+
+      <div class="jsPulldown" x-data="{ show: false }">
+          <button
+              @click="show = !show"
+              @click.away="show = false">
+              <span>
+                  {{ isset($currentCategory) ? ucwords($currentCategory->name) : 'Category' }}
+              </span><span>▽</span>
+          </button>
+          <!-- setting display to none in the css file causes this to never show - why? -->
+          <div x-show="show" style="display: none;">
+              @foreach($categories as $category)
+                  @unless(isset($currentCategory) && $category->is($currentCategory))
+                      <a href="/categories/{{$category->slug}}">{{ucwords($category->name)}}</a>
+                  @endunless
+              @endforeach
+          </div>
+      </div>
+
+
+
+
