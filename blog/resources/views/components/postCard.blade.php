@@ -9,7 +9,7 @@
             <h2>{{ $post->title }}</h2>
             <div class="published">Published {{ $post->created_at->diffForHumans() }}</div>
             <div class="excerpt">
-                <p>{{ $post->excerpt }}</p>
+                {!!  $post->excerpt !!}
             </div>
         </div>
         <div class="authorRow">

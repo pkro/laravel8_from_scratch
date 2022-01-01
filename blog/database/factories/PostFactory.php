@@ -17,9 +17,9 @@ class PostFactory extends Factory
     {
         return [
             'title' => $this->faker->sentence(4),
-            'excerpt' => $this->faker->sentence(),
+            'excerpt' => '<p>' . $this->faker->paragraph() . '</p>',
             'slug' => $this->faker->unique()->slug(3),
-            'body' => $this->faker->paragraph(12),
+            'body' => '<p>' . implode('</p><p>', $this->faker->paragraphs(6)) . '</p>',
             'published' => $this->faker->dateTimeBetween('-10 days'),
             // don't forget to import these, e.g. use App\Models\Category;
             'category_id' => Category::factory(), // we created this as well
