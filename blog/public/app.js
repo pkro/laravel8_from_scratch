@@ -3,8 +3,12 @@
     // make whole post clickable
     document.querySelectorAll('[data-link]').forEach(linkElement => {
         linkElement.addEventListener('click', el => {
-            window.location.href = el.currentTarget.dataset.link;
-        })
+            const tag = el.target.tagName.toLowerCase();
+            // I still want the individual buttons for category etc. inside to work independently
+            if(['a', 'button'].indexOf(tag) === -1)  {
+                window.location.href = el.currentTarget.dataset.link
+            }
+        });
     });
     /*const mainContent = document.querySelector('.mainContent');
     mainContent.classList.add('slideIn');
