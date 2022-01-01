@@ -1,5 +1,5 @@
 @props(['post'])
-<article>
+<article data-link="/post/{{ $post->slug }}">
     <img src="https://picsum.photos/id/{{$post->id*3}}/1200/1200" alt="nada">
     <div class="postOverview">
         <div class="overviewTop">
@@ -17,7 +17,7 @@
                 <img class="avatar" src="https://picsum.photos/30/30?{{ $post->author->name }}" alt="avatar">
                 <div class="div">{{ $post->author->name }}</div>
             </a>
-            <a class="button navLink" href="/post/{{ $post->slug }}">Read more</a>
+            <a class="screenReaderOnly" href="/post/{{ $post->slug }}">Read more</a>
         </div>
     </div>
 </article>
