@@ -96,6 +96,7 @@ section > header {
 }
 
 .controls {
+    margin-top: 2em;
     justify-content: space-evenly;
 }
 
@@ -126,11 +127,12 @@ section > header {
     background-color: #EEE;
     border-radius: 5px;
     position: absolute;
-
     text-align: left;
     padding-left: 0.5em;
     min-width: 12em;
     max-width: max-content;
+    max-height: 20em;
+    overflow: auto;
     z-index: 1000;
 }
 
@@ -145,7 +147,7 @@ section > header {
 
 
 main {
-    margin-top: 1em;
+    margin-top: 3em;
     display: grid;
     grid-template-columns: [first] repeat(3, 1fr) [middle] repeat(3, 1fr) [end];
     grid-gap: 20px;
