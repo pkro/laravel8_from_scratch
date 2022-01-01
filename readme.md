@@ -338,6 +338,8 @@ The `$loop` properties can be useful for conditional formating in the html by ch
 
 Blade also has convenience flow control keywords such as `@unless / @endunless` as the opposite of `@if`.
 
+Comments in blade: `{{-- my useful comment --}}`
+
 ## Layouts
 
 Layouts (to avoid repetitive HTML boilerplate code in each view) can be defined in 2 ways.
@@ -976,6 +978,48 @@ See `_header.blade.php` for an example of a javascript pulldown using alpine.js 
           </div>
       </div>
 
+Side note: `defer` in a script tag means it should be loaded in parallel but executed after the page is loaded.
+
+- Routes can be named (`->name('home')`) and accessed in view (`request()->routeIs('home')`). This can be useful for checking which menu item to set to active / style differently.
+
+The alpinejs functionality can be further isolated into it's own component:
+
+dropdown.blade.php
+
+    <div class="jsPulldown" x-data="{ show: false }">
+        <div
+            @click="show = !show"
+            @click.away="show = false">
+    
+            {{-- trigger element, which can be anything --}}
+            {{ $trigger }}
+        </div>
+        <!-- setting display to none in the css file causes this to never show - why? -->
+        <div x-show="show" style="display: none;">
+            {{-- links --}}
+            {{ $slot }}
+        </div>
+    </div>
 
 
+_header.blade.php
 
+    <x-dropdown>
+        <x-slot name="trigger">
+            <button>
+                 <span>
+                    {{ isset($currentCategory) ? ucwords($currentCategory->name) : 'Category' }}
+                </span>
+                <span>▽</span>
+            </button>
+        </x-slot>
+
+        {{-- this goes into the default {{$slot}} --}}
+        <x-slot name="slot">
+        @foreach($categories as $category)
+            @unless(isset($currentCategory) && $category->is($currentCategory))
+                <a href="/categories/{{$category->slug}}">{{ucwords($category->name)}}</a>
+            @endunless
+        @endforeach
+        </x-slot>
+    </x-dropdown>
