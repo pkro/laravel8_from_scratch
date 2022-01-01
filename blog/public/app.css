@@ -157,13 +157,15 @@ section > header {
 main {
     margin-top: 3em;
     display: grid;
+    justify-items: center;
     grid-template-columns: [first] repeat(3, 1fr) [middle] repeat(3, 1fr) [end];
-    grid-gap: 20px;
+    grid-gap: 32px;
 
 }
 
 article {
     width: 100%;
+
     grid-column: span 2;
     padding: 20px;
     display: flex;
@@ -171,6 +173,10 @@ article {
     justify-content: space-between;
     border-radius: 5px;
     box-shadow: gray 2px 2px 2px 2px;
+}
+
+article:not([class*='post']) {
+    max-width: 900px;
 }
 
 article:not([class*='post']):hover {
