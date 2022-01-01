@@ -26,7 +26,7 @@ Route::get('/', function () {
         'categories' => Category::all(),
         'currentCategory' => null
     ]);
-});
+})->name('home'); // named route, optional. can be checked with request()->routIs('home') in view
 
 // a getRouteKeyName method to the model that returns 'slug',
 // so the post will be selected by the slug in the url, e.g. slug/my-first-post
@@ -43,7 +43,7 @@ Route::get('categories/{category:slug}', function (Category $category) {
         'categories' => Category::all(),
         'currentCategory' => $category
     ]);
-});
+})->name('category');
 
 Route::get('authors/{author:username}', function (User $author) {
     return view('posts', ['posts' => $author->posts->load(['category', 'author']), 'categories' => Category::all()]);
