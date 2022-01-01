@@ -25,12 +25,6 @@
                 </x-slot>
             </x-dropdown>
 
-            <select name="category" id="category">
-                <option value="0" disabled selected>Other filters</option>
-                <option value="1">Fun</option>
-                <option value="2">Serious</option>
-                <option value="3">Random</option>
-            </select>
             <form method="GET" action="#">
                 <input type="text" name="search" placeholder="Find something">
             </form>
