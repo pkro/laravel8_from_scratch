@@ -25,3 +25,9 @@
         </div>
     </div>
 </article>
+
+<script>
+    const articleImage = document.querySelector('article > img:first-of-type').src;
+    document.body.style.backgroundImage = `url(${articleImage})`;
+
+</script>

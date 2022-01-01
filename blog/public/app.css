@@ -1,5 +1,7 @@
 * {
     --darkerBgCorner: rgba(159, 159, 159, 0.69);
+    --transparentWhite: rgba(255, 255, 255, 0.9);
+
 }
 html * {
     box-sizing: border-box;
@@ -14,6 +16,12 @@ body {
     margin: 0;
 }
 
+html, body {
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
 p {
     line-height: 1.6;
 }
@@ -21,13 +29,13 @@ p {
 .mainContent {
     /*transform: translate(-150vw);*/
     width: 100%;
-    height: 100%;
+    border: 1px solid green;
     min-height: 100%;
     color: white;
     transition: transform 0.2s 0s ease-out;
     padding: 0.3em;
     margin: 0;
-    background: linear-gradient(to right bottom, var(--darkerBgCorner) 0%, #FFFFFF 30%);
+    background: linear-gradient(to right bottom, var(--darkerBgCorner) 0%, var(--transparentWhite) 30%);
 }
 
 /*The main section*/
@@ -165,9 +173,10 @@ article {
     box-shadow: gray 2px 2px 2px 2px;
 }
 
-article:hover {
+article:not([class*='post']):hover {
     background: rgba(30, 144, 255, 0.5);
     transition: all 0.2s 0s linear;
+    cursor: pointer;
 }
 
 /*first one spans whole width*/
@@ -246,7 +255,7 @@ article:first-of-type .postOverview {
     height: max-content;
 }
 
-article:hover .button {
+article:not([class*='post']):hover .button {
     border: 1px solid white;
     color: white;
     transition: all 0.2s 0s;
@@ -292,6 +301,9 @@ footer button {
 }
 
 /* post page */
+.post {
+    background-color: rgba(255,255,255,0.8);
+}
 
 .post > img {
     max-width: 160px;
@@ -329,3 +341,12 @@ footer button {
     }
 }
 
+.screenReaderOnly {clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+}
