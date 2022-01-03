@@ -1,4 +1,4 @@
-@props(['showControls', 'categories', 'currentCategory'])
+@props(['showControls', 'categories', 'currentCategory', 'searchTerm'])
 
 <html lang="en">
 <head>

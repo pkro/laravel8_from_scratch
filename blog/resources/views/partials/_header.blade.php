@@ -26,7 +26,7 @@
             </x-dropdown>
 
             <form method="GET" action="#">
-                <input type="text" name="search" placeholder="Find something">
+                <input type="text" name="search" placeholder="Find something" value="{{$searchTerm}}">
             </form>
         </nav>
     @endif

@@ -1023,3 +1023,41 @@ _header.blade.php
         @endforeach
         </x-slot>
     </x-dropdown>
+
+# Search
+
+## The messy way
+
+In the main way, we could add a where clause to the query for the fields we want to search for the searchterm entered, which we find in the "search" variable (the search field is a GET form with only the `search` field in `_header.blade.php`:
+
+routes/web.php
+
+    Route::get('/', function () {
+      $posts = Post::latest('published')->with(['category', 'author']);
+    
+      if (request('search')) {
+          $posts
+              ->where('title', 'like', '%' . request('search') . '%')
+              ->orWhere('body', 'like', '%' . request('search') . '%');
+      }
+      return view('posts', [
+          'posts' => $posts->get(),
+          'categories' => Category::all(),
+          'currentCategory' => null,
+          'searchTerm' => request('search')
+      ]);
+    })->name('home'); 
+
+views/posts.blase.php
+
+    <x-myPrettyLayout :showControls="true" :categories="$categories" :currentCategory="$currentCategory" :searchTerm="$searchTerm">
+    ...
+
+views/partials/_header.blade.php (just to keep the searchterm in the search field after the search)
+
+    ...
+    <input type="text" name="search" placeholder="Find something" value="{{$searchTerm}}">
+    ...
+
+
+## The cleaner way

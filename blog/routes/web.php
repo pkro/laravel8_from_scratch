@@ -16,15 +16,18 @@ use App\Models\Post;
 |
 */
 Route::get('/', function () {
-    /*\Illuminate\Support\Facades\DB::listen(function($query) {
-        //\Illuminate\Support\Facades\Log::info('query executed');
-        //or, shorter
-        logger($query->sql, $query->bindings);
-    });*/
+    $posts = Post::latest('published')->with(['category', 'author']);
+
+    if (request('search')) {
+        $posts
+            ->where('title', 'like', '%' . request('search') . '%')
+            ->orWhere('body', 'like', '%' . request('search') . '%');
+    }
     return view('posts', [
-        'posts' => Post::latest('published')->with(['category', 'author'])->get(),
+        'posts' => $posts->get(),
         'categories' => Category::all(),
-        'currentCategory' => null
+        'currentCategory' => null,
+        'searchTerm' => request('search')
     ]);
 })->name('home'); // named route, optional. can be checked with request()->routIs('home') in view
 
