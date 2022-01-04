@@ -1060,4 +1060,93 @@ views/partials/_header.blade.php (just to keep the searchterm in the search fiel
     ...
 
 
-## The cleaner way
+## The cleaner way / introduction to Controllers
+
+We want to extract the logic / search specification from our routes file as it becomes messy with logic, which is not its responsibility, so we create a controller:
+
+    php artisan make:controller PostController # name is arbitrary
+
+This creates a `PostController.php` file in `app/Http/Controllers`
+
+In this controller we can create a method `index` (name arbitrary but fitting for our purpose / route):
+
+    use App\Models\Category;
+    use App\Models\Post;
+    use Illuminate\Http\Request;
+    
+    class PostController extends Controller
+    {
+        public function index() {
+            $posts = Post::latest('published')->with(['category', 'author']);
+    
+            if (request('search')) {
+                $posts
+                    ->where('title', 'like', '%' . request('search') . '%')
+                    ->orWhere('body', 'like', '%' . request('search') . '%');
+            }
+            return view('posts', [
+                'posts' => $posts->get(),
+                'categories' => Category::all(),
+                'currentCategory' => null,
+                'searchTerm' => request('search')
+            ]);
+        }
+    }
+
+In the routes file we specified the action to be taken for that route with an anonymous function so far, but we can put anything of a `callable` type, which can be specified (in PHP in general) using an array with the class name and the method:
+
+web.php
+
+    Route::get('/', [PostController::class, 'index'])->name('home');
+
+We can (and should) do the same for all the other routes in `web.php` (see code).
+
+We can further refactor the actual query for the title / body into its own protected method in the controller, but a better way would be to add a **query scope** to the `Post` eloquent model:
+
+models/Post.php
+
+    public function scopeFilter($query) {
+        if (request('search')) {
+            $query
+                ->where('title', 'like', '%' . request('search') . '%')
+                ->orWhere('body', 'like', '%' . request('search') . '%');
+        }
+    }
+
+Http/Controllers/PostController.php
+
+    public function index() {
+        //...
+        return view('posts', [
+            'posts' => Post::latest('published')->with(['category', 'author'])->filter()->get(),
+            // ...
+
+Problem: we don't want to access the request parameter directly from the model as this doesn't seem to be the Model's responisibility. Instead, we accept a list of filters in the `scopeFilter` method.
+
+    public function scopeFilter($query, array $filters) {
+        if (isset($filters['search'])) {
+            $query
+                ->where('title', 'like', '%' . request('search') . '%')
+                ->orWhere('body', 'like', '%' . request('search') . '%');
+        }
+    }
+
+  which is equivalent to
+
+    public function scopeFilter($query, array $filters) {
+        $query->when($filters['search'] ?? false, function($query, $search) {
+            $query
+                ->where('title', 'like', '%' . $search . '%')
+                ->orWhere('body', 'like', '%' . $search . '%');
+        });
+    }
+
+  and pass ist an array in the PostController like this:
+  
+    'posts' => Post::latest('published')->with(['category', 'author'])->filter(request()->only('search'))->get(),
+
+`request()->only('search')` just returns an array `['search' => "search value"]`
+
+# Filtering
+
+## Advanced Eloquent Query Constraints

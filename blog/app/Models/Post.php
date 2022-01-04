@@ -16,6 +16,14 @@ class Post extends Model
     // You could then add `without` for queries where you **don't** want eager loading, e.g. `Post::without()->first()`.
     //protected $with = ['category', 'author'];
 
+    // the first parameter $query is passed by laravel automatically when using the ->filter method
+    public function scopeFilter($query, array $filters) {
+        $query->when($filters['search'] ?? false, function($query, $search) {
+            $query
+                ->where('title', 'like', '%' . $search . '%')
+                ->orWhere('body', 'like', '%' . $search . '%');
+        });
+    }
 
     public function getRouteKeyName()
     {
