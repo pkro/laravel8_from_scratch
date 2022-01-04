@@ -38,6 +38,11 @@ Notes on the laracasts course of the same name
   - [Eager loading relationships on an existing model](#eager-loading-relationships-on-an-existing-model)
 - [Integrate the design](#integrate-the-design)
   - [AlpineJS Exkurs](#alpinejs-exkurs)
+- [Search](#search)
+  - [The messy way](#the-messy-way)
+  - [The cleaner way / introduction to Controllers](#the-cleaner-way--introduction-to-controllers)
+- [Filtering](#filtering)
+  - [Advanced Eloquent Query Constraints](#advanced-eloquent-query-constraints)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
